@@ -1,0 +1,35 @@
+#include "syscall.h"
+#define MAX 20
+int main()
+{	
+	char buf[MAX+1];
+	char filenameSource[MAX+1], filenameDest[MAX+1];
+	OpenFileId ids, idd;//id source, id dest
+	int stat;
+	PrintString("Nhap ten file nguon (vi du: da2.source): ");
+	Read(filenameSource, MAX, 0);
+	PrintString("Nhap ten file dich (vi du: da2.dest): ");
+	Read(filenameDest, MAX, 0);
+	ids = Open(filenameSource, 1);//read only
+	
+	
+	if (ids != -1) {
+		PrintString("Dang tien hanh copy file do ban hien.\n");
+		stat = CreateFile(filenameDest);
+		if (stat == -1) {
+			PrintString("Ko tao file moi duoc");
+			Halt();
+		}
+		idd = Open(filenameDest, 0);
+		do {
+			stat = Read(buf, MAX, ids);
+			if (stat <= 0)
+				break;
+			Write(buf, stat, idd);
+			buf[0] = '\0';
+		} while (1);
+		PrintString("Da copy xong.\n");
+	} else
+		PrintString("Ko mo duoc file! File ko ton tai!");
+	Halt();
+}
